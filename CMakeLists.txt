@@ -15,6 +15,7 @@ find_package(example_interfaces REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rosbag2_cpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(rosbag2_transport REQUIRED)
 find_package(turtlesim REQUIRED)
 
