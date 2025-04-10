@@ -7,7 +7,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/serialization.hpp"
 #include "rosbag2_transport/reader_writer_factory.hpp"
-#include "turtlesim/msg/pose.hpp"
+#include <sensor_msgs/msg/image.hpp>
 
 using namespace std::chrono_literals;
 
@@ -17,7 +17,7 @@ class PlaybackNode : public rclcpp::Node
     PlaybackNode(const std::string & bag_filename)
     : Node("playback_node")
     {
-      publisher_ = this->create_publisher<turtlesim::msg::Pose>("/turtle1/pose", 10);
+      publisher_ = this->create_publisher<sensor_msgs::msg::Image>("/images", 10);
       timer_ = this->create_wall_timer(
           100ms, std::bind(&PlaybackNode::timer_callback, this));
 
@@ -33,26 +33,26 @@ class PlaybackNode : public rclcpp::Node
       while (reader_->has_next()) {
         rosbag2_storage::SerializedBagMessageSharedPtr msg = reader_->read_next();
 
-        if (msg->topic_name != "/turtle1/pose") {
+        if (msg->topic_name != "/images") {
           continue;
         }
 
         rclcpp::SerializedMessage serialized_msg(*msg->serialized_data);
-        turtlesim::msg::Pose::SharedPtr ros_msg = std::make_shared<turtlesim::msg::Pose>();
+        sensor_msgs::msg::Image::SharedPtr ros_msg = std::make_shared<sensor_msgs::msg::Image>();
 
         serialization_.deserialize_message(&serialized_msg, ros_msg.get());
 
         publisher_->publish(*ros_msg);
-        std::cout << '(' << ros_msg->x << ", " << ros_msg->y << ")\n";
+        //std::cout << '(' << ros_msg->x << ", " << ros_msg->y << ")\n";
 
         break;
       }
     }
 
     rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Publisher<turtlesim::msg::Pose>::SharedPtr publisher_;
+    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
 
-    rclcpp::Serialization<turtlesim::msg::Pose> serialization_;
+    rclcpp::Serialization<sensor_msgs::msg::Image> serialization_;
     std::unique_ptr<rosbag2_cpp::Reader> reader_;
 };
 

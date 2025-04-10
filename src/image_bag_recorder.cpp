@@ -1,6 +1,7 @@
 #include <rclcpp/rclcpp.hpp>
-#include <sensor_msgs/image.hpp>
 #include <rosbag2_cpp/writer.hpp>
+
+#include "sensor_msgs/msg/image.hpp"
 
 using std::placeholders::_1;
 
@@ -8,14 +9,14 @@ class SimpleBagRecorder : public rclcpp::Node
 {
 public:
   SimpleBagRecorder()
-  : Node("simple_bag_recorder")
+  : Node("recorder_node")
   {
     writer_ = std::make_unique<rosbag2_cpp::Writer>();
 
     writer_->open("my_bag");
 
-    subscription_ = create_subscription<sensor_msgs::Image>(
-      "images", 10, std::bind(&SimpleBagRecorder::topic_callback, this, _1));
+    subscription_ = create_subscription<sensor_msgs::msg::Image>(
+      "/images", 10, std::bind(&SimpleBagRecorder::topic_callback, this, _1));
   }
 
 private:
@@ -23,10 +24,10 @@ private:
   {
     rclcpp::Time time_stamp = this->now();
 
-    writer_->write(msg, "images", "sensor_msgs/Image", time_stamp);
+    writer_->write(msg, "/images", "sensor_msgs/msg/Image", time_stamp);
   }
 
-  rclcpp::Subscription<sensor_msgs::Image>::SharedPtr subscription_;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_;
   std::unique_ptr<rosbag2_cpp::Writer> writer_;
 };
 

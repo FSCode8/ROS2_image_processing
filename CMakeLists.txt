@@ -17,26 +17,25 @@ find_package(rosbag2_cpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(rosbag2_transport REQUIRED)
-find_package(turtlesim REQUIRED)
 
 add_executable(image_recorder src/image_bag_recorder.cpp)
-ament_target_dependencies(image_recorder rclcpp rosbag2_cpp std_msgs)
+ament_target_dependencies(image_recorder rclcpp rosbag2_cpp sensor_msgs)
 
 install(TARGETS
   image_recorder
   DESTINATION lib/${PROJECT_NAME}
 )
 
-add_executable(data_generator_executable src/data_generator_executable.cpp)
-ament_target_dependencies(data_generator_executable rclcpp rosbag2_cpp example_interfaces)
+#add_executable(data_generator_executable src/data_generator_executable.cpp)
+#ament_target_dependencies(data_generator_executable rclcpp rosbag2_cpp example_interfaces)
 
-install(TARGETS
-  data_generator_executable
-  DESTINATION lib/${PROJECT_NAME}
-)
+#install(TARGETS
+#  data_generator_executable
+#  DESTINATION lib/${PROJECT_NAME}
+#)
 
 add_executable(image_reader src/image_bag_reader.cpp)
-ament_target_dependencies(image_reader rclcpp rosbag2_transport turtlesim)
+ament_target_dependencies(image_reader rclcpp rosbag2_transport sensor_msgs)
 
 install(TARGETS
   image_reader
